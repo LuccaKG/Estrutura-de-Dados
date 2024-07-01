@@ -48,5 +48,8 @@ int main() {
     // Libera a memoria alocada
     free(casos);
 
+    /* Note que cada posição do vetor corresponde a uma idade; por exemplo: casos[3] corresponde aos casos de covid para idade
+    de 3 anos.*/
+
     return 0;
 }
