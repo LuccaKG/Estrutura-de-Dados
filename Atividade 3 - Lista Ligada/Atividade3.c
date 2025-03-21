@@ -61,15 +61,25 @@ void printList(Node* head, int N) {
     printf("\n");
 }
 
+// Função para encontrar o elemento após K deslocamentos no sentido horário
+int findElementAfterK(Node* head, int K) {
+    Node* temp = head;
+    for (int i = 0; i < K; i++) {
+        temp = temp->next;
+    }
+    return temp->data;
+}
+
 // Função principal
 int main() {
-    int N, C;
-    scanf("%d %d", &N, &C);
+    int N, C, K;
+    scanf("%d %d %d", &N, &C, &K);
 
     Node* head = createDoublyLinkedList(N);
     head = rearrangeList(head, C, N);
 
     printList(head, N);
+    printf("%d\n", findElementAfterK(head, K));
 
     return 0;
 }
