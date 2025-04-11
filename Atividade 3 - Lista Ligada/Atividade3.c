@@ -104,52 +104,44 @@ int main() {
     Node* head = createDoublyLinkedList(N);
     head = rearrangeList(head, C);
 
-    // Inicializa as posições de partida dos atendentes
     Node* current1 = head;
     Node* current2 = head;
 
-    // --------- Primeira iteração ---------
-    Node* kNode = moveClockwise(current1, K);
-    Node* lNode = moveCounterClockwise(current2, L);
+    int round = 1;
 
-    printf("Removidos: %d %d\n", kNode->data, lNode->data);
+    while (N > 0) {
+        printf("Rodada %d:\n", round);
 
-    if (kNode == lNode) {
-        head = removeNode(head, kNode, &N);
-        current1 = current2 = kNode->next;
-    } else {
-        Node* next1 = kNode->next;
-        Node* next2 = lNode->next;
-        head = removeNode(head, kNode, &N);
-        head = removeNode(head, lNode, &N);
-        current1 = next1;
-        current2 = next2;
-    }
-
-    if (N > 0)
-        printList(head, N);
-    else
-        printf("Lista vazia.\n");
-
-
-    // --------- Segunda iteração ---------
-    if (N > 0) {
-        kNode = moveClockwise(current1, K-1);
-        lNode = moveCounterClockwise(current2, L);
+        Node* kNode = moveClockwise(current1, (round == 1) ? K : K - 1);
+        Node* lNode = moveCounterClockwise(current2, L);
 
         printf("Removidos: %d %d\n", kNode->data, lNode->data);
 
         if (kNode == lNode) {
+            Node* next = kNode->next;
             head = removeNode(head, kNode, &N);
+            current1 = current2 = next;
         } else {
+            Node* next1 = kNode->next;
+            Node* next2 = lNode->next;
+
+            // Evita usar ponteiro para memória que será liberada
+            if (next1 == lNode) next1 = lNode->next;
+            if (next2 == kNode) next2 = kNode->next;
+
             head = removeNode(head, kNode, &N);
             head = removeNode(head, lNode, &N);
+
+            current1 = next1;
+            current2 = next2;
         }
 
         if (N > 0)
             printList(head, N);
         else
             printf("Lista vazia.\n");
+
+        round++;
     }
 
     return 0;
