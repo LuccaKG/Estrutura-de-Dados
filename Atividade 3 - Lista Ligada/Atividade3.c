@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Estrutura do nó da lista duplamente ligada
 typedef struct Node {
     int data;
     struct Node* prev;
     struct Node* next;
 } Node;
 
-// Função para criar um novo nó
 Node* createNode(int data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     if (!newNode) {
@@ -21,7 +19,6 @@ Node* createNode(int data) {
     return newNode;
 }
 
-// Função para criar uma lista duplamente ligada circular com N elementos
 Node* createDoublyLinkedList(int N) {
     if (N <= 0) return NULL;
 
@@ -35,23 +32,20 @@ Node* createDoublyLinkedList(int N) {
         temp = newNode;
     }
 
-    // Tornar a lista circular
     temp->next = head;
     head->prev = temp;
 
     return head;
 }
 
-// Função para reorganizar a lista circular para que C seja a cabeça
-Node* rearrangeList(Node* head, int C, int N) {
+Node* rearrangeList(Node* head, int C) {
     Node* temp = head;
     while (temp->data != C) {
         temp = temp->next;
     }
-    return temp; // Retorna o novo head
+    return temp;
 }
 
-// Função para imprimir a lista circular uma única vez
 void printList(Node* head, int N) {
     Node* temp = head;
     for (int i = 0; i < N; i++) {
@@ -61,35 +55,65 @@ void printList(Node* head, int N) {
     printf("\n");
 }
 
-// Função para encontrar o elemento após K deslocamentos no sentido horário
-int findElementAfterK(Node* head, int K) {
-    Node* temp = head;
-    for (int i = 0; i < K; i++) {
+Node* moveClockwise(Node* start, int steps) {
+    Node* temp = start;
+    for (int i = 0; i < steps; i++) {
         temp = temp->next;
     }
-    return temp->data;
+    return temp;
 }
 
-// Função para encontrar o elemento após L deslocamentos no sentido anti-horário
-int findElementAfterL(Node* head, int L) {
-    Node* temp = head;
-    for (int i = 0; i < L; i++) {
+Node* moveCounterClockwise(Node* start, int steps) {
+    Node* temp = start;
+    for (int i = 0; i < steps; i++) {
         temp = temp->prev;
     }
-    return temp->data;
+    return temp;
 }
 
-// Função principal
+// Remove um nó da lista e retorna a nova cabeça (se o nó removido for a cabeça)
+Node* removeNode(Node* head, Node* target, int* N) {
+    if (*N == 1) {
+        free(target);
+        *N = 0;
+        return NULL;
+    }
+
+    target->prev->next = target->next;
+    target->next->prev = target->prev;
+
+    Node* newHead = (head == target) ? target->next : head;
+
+    free(target);
+    (*N)--;
+
+    return newHead;
+}
+
 int main() {
     int N, C, K, L;
     scanf("%d %d %d %d", &N, &C, &K, &L);
 
     Node* head = createDoublyLinkedList(N);
-    head = rearrangeList(head, C, N);
+    head = rearrangeList(head, C);
 
-    printList(head, N);
-    printf("%d\n", findElementAfterK(head, K));
-    printf("%d\n", findElementAfterL(head, L));
+    Node* kNode = moveClockwise(head, K);
+    Node* lNode = moveCounterClockwise(head, L);
+
+    printf("%d %d\n", kNode->data, lNode->data);
+
+    if (kNode == lNode) {
+        head = removeNode(head, kNode, &N);
+    } else {
+        head = removeNode(head, kNode, &N);
+        head = removeNode(head, lNode, &N);
+    }
+
+    if (N > 0) {
+        printList(head, N);
+    } else {
+        printf("Lista vazia.\n");
+    }
 
     return 0;
 }
