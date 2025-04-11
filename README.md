@@ -4,7 +4,7 @@ Estudo de algoritmos e estrutura de dados.
 ## Exercícios de laboratório
 - [x] Exercícios básicos de C 
 - [x] Nó, apontador, variável apontadora, alocação dinâmica de memória 
-- [ ] Listas ligadas (apontadores) e listas por vetores 
+- [x] Listas ligadas (apontadores) e listas por vetores 
 - [ ] Pilhas e filas
 - [ ] Merge de listas e mergesort
 - [ ] Algoritmos de ordenação
