@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Estrutura de nó da lista duplamente ligada circular
 typedef struct Node {
     int data;
     struct Node* prev;
     struct Node* next;
 } Node;
 
+// Criação de novo nó com valor 'data'
 Node* createNode(int data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     if (!newNode) {
@@ -19,6 +21,7 @@ Node* createNode(int data) {
     return newNode;
 }
 
+// Cria uma lista duplamente ligada circular com N elementos (0 a N-1)
 Node* createDoublyLinkedList(int N) {
     if (N <= 0) return NULL;
 
@@ -38,6 +41,7 @@ Node* createDoublyLinkedList(int N) {
     return head;
 }
 
+// Move o ponteiro para que a cabeça da lista aponte para o cliente C
 Node* rearrangeList(Node* head, int C) {
     Node* temp = head;
     while (temp->data != C) {
@@ -46,6 +50,7 @@ Node* rearrangeList(Node* head, int C) {
     return temp;
 }
 
+// Imprime os N elementos a partir do head atual
 void printList(Node* head, int N) {
     Node* temp = head;
     for (int i = 0; i < N; i++) {
@@ -55,6 +60,7 @@ void printList(Node* head, int N) {
     printf("\n");
 }
 
+// Anda 'steps' passos no sentido horário a partir de 'start'
 Node* moveClockwise(Node* start, int steps) {
     Node* temp = start;
     for (int i = 0; i < steps; i++) {
@@ -63,6 +69,7 @@ Node* moveClockwise(Node* start, int steps) {
     return temp;
 }
 
+// Anda 'steps' passos no sentido anti-horário a partir de 'start'
 Node* moveCounterClockwise(Node* start, int steps) {
     Node* temp = start;
     for (int i = 0; i < steps; i++) {
@@ -71,7 +78,7 @@ Node* moveCounterClockwise(Node* start, int steps) {
     return temp;
 }
 
-// Remove um nó da lista e retorna a nova cabeça (se o nó removido for a cabeça)
+// Remove um nó da lista e atualiza a cabeça, se necessário
 Node* removeNode(Node* head, Node* target, int* N) {
     if (*N == 1) {
         free(target);
@@ -97,22 +104,52 @@ int main() {
     Node* head = createDoublyLinkedList(N);
     head = rearrangeList(head, C);
 
-    Node* kNode = moveClockwise(head, K);
-    Node* lNode = moveCounterClockwise(head, L);
+    // Inicializa as posições de partida dos atendentes
+    Node* current1 = head;
+    Node* current2 = head;
 
-    printf("%d %d\n", kNode->data, lNode->data);
+    // --------- Primeira iteração ---------
+    Node* kNode = moveClockwise(current1, K);
+    Node* lNode = moveCounterClockwise(current2, L);
+
+    printf("Removidos: %d %d\n", kNode->data, lNode->data);
 
     if (kNode == lNode) {
         head = removeNode(head, kNode, &N);
+        current1 = current2 = kNode->next;
     } else {
+        Node* next1 = kNode->next;
+        Node* next2 = lNode->next;
         head = removeNode(head, kNode, &N);
         head = removeNode(head, lNode, &N);
+        current1 = next1;
+        current2 = next2;
     }
 
-    if (N > 0) {
+    if (N > 0)
         printList(head, N);
-    } else {
+    else
         printf("Lista vazia.\n");
+
+
+    // --------- Segunda iteração ---------
+    if (N > 0) {
+        kNode = moveClockwise(current1, K-1);
+        lNode = moveCounterClockwise(current2, L);
+
+        printf("Removidos: %d %d\n", kNode->data, lNode->data);
+
+        if (kNode == lNode) {
+            head = removeNode(head, kNode, &N);
+        } else {
+            head = removeNode(head, kNode, &N);
+            head = removeNode(head, lNode, &N);
+        }
+
+        if (N > 0)
+            printList(head, N);
+        else
+            printf("Lista vazia.\n");
     }
 
     return 0;
