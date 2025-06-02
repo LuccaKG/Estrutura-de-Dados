@@ -8,7 +8,7 @@ Estudo de algoritmos e estrutura de dados.
 - [x] Pilhas e filas
 - [ ] Merge de listas e mergesort
 - [ ] Algoritmos de ordenação
-- [ ] Árvores binárias
+- [x] Árvores binárias
 - [ ] Hash: conceitos e implementação com apontadores
 - [ ] Algoritmos de busca em grafos: busca em largura e busca em profundidade
   
